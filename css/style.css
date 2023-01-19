@@ -347,8 +347,9 @@ fieldset {
 
 .ad-form__element {
   -ms-flex-preferred-size: 25%;
-      flex-basis: 25%;
+  flex-basis: 25%;
   min-height: 90px;
+  padding-right: 20px;
 
   font-size: 14px;
 }
@@ -367,7 +368,7 @@ fieldset {
 .ad-form__element input,
 .ad-form__element select,
 .ad-form__element textarea {
-  width: calc(100% - 20px);
+  width: 100%;
 
   font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
