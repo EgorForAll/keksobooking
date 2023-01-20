@@ -78,28 +78,63 @@ pristine.addValidator(form.querySelector('#title'),
 );
 
 // Валидация цены
+const type = form.querySelector('#type');
+const price = form.querySelector('#price');
 
 function validatePrice() {
-  const type = form.querySelector('#type');
-  const typeList = form.querySelector('#type').children;
-  const price = form.querySelector('#price');
   if (type.value === TYPE[1]) {
-    console.log('yes');
     price.placeholder = 1000;
+    return price.value >= 1000;
   } else if (type.value === TYPE[2]) {
     price.placeholder = 3000;
+    return price.value >= 3000;
   } else if (type.value === TYPE[3]) {
     price.placeholder = 5000;
+    return price.value >= 5000;
   } else if (type.value === TYPE[4]) {
     price.placeholder = 10000;
+    return price.value >= 10000;
   } else {
     price.placeholder = 0;
   }
 };
 
+function errorMessage() {
+  if (type.value === TYPE[1]) {
+    return 'не менее 1000 руб.';
+  } else if (type.value === TYPE[2]) {
+    return 'не менее 3000 руб.';
+  } else if (type.value === TYPE[3]) {
+    return 'не менее 5000 руб.';
+  } else if (type.value === TYPE[4]) {
+    return 'не менее 10000 руб.';
+  }
+}
+
+type.addEventListener('click', validatePrice);
+
 pristine.addValidator(form.querySelector('#price'),
   validatePrice,
-  'не более 100000'
+  errorMessage
+);
+
+// Валидация количества комнат
+const roomNumber = form.querySelector('#room_number');
+const capacity = form.querySelector('#capacity');
+
+const capacityAbility = {
+  1: 1,
+  2: 2,
+  3: 3,
+  100: 0
+};
+
+function validateCapacity() {
+  return capacity.value <= capacityAbility[roomNumber.value];
+};
+
+pristine.addValidator(capacity,
+  validateCapacity
 );
 
 form.addEventListener('submit', (evt) => {
