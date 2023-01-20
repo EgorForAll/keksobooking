@@ -137,6 +137,49 @@ pristine.addValidator(capacity,
   validateCapacity
 );
 
+// Валидация вресени заезда, выезда
+const timeIn = form.querySelector('#timein');
+const timeOut = form.querySelector('#timeout');
+const timeInList = Array.from(timeIn.children);
+const timeOutList = Array.from(timeOut.children);
+const timeInArray = [];
+const timeOutArray = [];
+timeInList.forEach((item) => {
+  timeInArray.push(item.value);
+});
+
+timeOutList.forEach((item) => {
+  timeOutArray.push(item.value);
+});
+
+function validateTimeIn() {
+
+  for (let i = 0; i < timeInArray.length; i++) {
+    if (timeIn.value === timeInArray[i]) {
+      timeOut.value = timeOutArray[i];
+      return timeIn.value === timeOut.value;
+    }
+  }
+}
+
+function validateTimeOut() {
+
+  for (let i = 0; i < timeOutArray.length; i++) {
+    if (timeOut.value === timeOutArray[i]) {
+      timeIn.value = timeInArray[i];
+      return timeOut.value === timeIn.value;
+    }
+  }
+}
+
+pristine.addValidator(timeIn,
+  validateTimeIn
+);
+
+pristine.addValidator(timeOut,
+  validateTimeOut
+);
+
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
