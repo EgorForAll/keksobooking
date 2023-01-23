@@ -1,33 +1,9 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import { clearFields } from './utils.js';
 import { TYPE } from './dates.js';
 
 const canvas = document.querySelector('.map__canvas');
 const popup = document.querySelector('.popup');
-
-const nonActivePage = () => {
-  canvas.removeChild(popup);
-  popup.remove();
-  document.querySelector('.ad-form').classList.add('ad-form--disabled');
-  document.querySelector('.ad-form-header').setAttribute('disabled', '');
-  document.querySelector('.map__filters').classList.add('ad-form--disabled');
-  const formElements = document.querySelectorAll('.ad-form__element');
-  formElements.forEach((element) => {
-    element.setAttribute('disabled', ' ');
-  });
-};
-
-const activePage = () => {
-  canvas.appendChild(popup);
-  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-  document.querySelector('.ad-form-header').removeAttribute('disabled', '');
-  document.querySelector('.map__filters').classList.remove('ad-form--disabled');
-  const formElements = document.querySelectorAll('.ad-form__element');
-  formElements.forEach((element) => {
-    element.removeAttribute('disabled', ' ');
-  });
-};
 
 const form = document.querySelector('.ad-form');
 
@@ -137,7 +113,7 @@ pristine.addValidator(capacity,
   validateCapacity
 );
 
-// Валидация вресени заезда, выезда
+// Валидация времени заезда, выезда
 const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
 const timeInList = Array.from(timeIn.children);

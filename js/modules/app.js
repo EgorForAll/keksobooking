@@ -15,10 +15,10 @@ const getOffer = () => ({
   checkout: getRandomArrayElement(CHECKOUT),
   features: getRandomArrayElement(FEATURES),
   photo: getRandomArrayElement(PHOTOS),
-  price: `${getRandomPositiveInteger(0, 10000)  }` + ' ' + 'Pуб/ночь',
+  price: `${getRandomPositiveInteger(0, 10000) } Руб/ночь`,
   rooms: getRandomPositiveInteger(1, 5),
   guests: getRandomPositiveInteger(1, 10),
-  description: getRandomArrayElement(DESCRIPTION),
+  description: getRandomArrayElement(DESCRIPTION)
 });
 
 const getAddress = () => ({
@@ -26,7 +26,7 @@ const getAddress = () => ({
   lng: getRandomPositiveFloat(139.70000, 139.80000)
 });
 
-const generalObject = function () {
+const generalObject = function() {
   return {
     author: getAuthor(),
     offer: getOffer(),
@@ -34,7 +34,7 @@ const generalObject = function () {
   };
 };
 
-const similarObjects = Array.from({length: 1}, generalObject);
+const similarObjects = Array.from({length: 9}, generalObject);
 
 export {similarObjects};
 
