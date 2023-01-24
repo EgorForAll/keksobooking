@@ -1,6 +1,4 @@
 const template = document.querySelector('#card').content.querySelector('.popup');
-const typeHouseFilter = document.querySelector('#housing-type');
-const typeHouseFilterValues = Array.from(typeHouseFilter.children);
 
 const createBalloon = (element) => {
   let balloon = template.cloneNode(true);

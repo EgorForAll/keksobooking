@@ -2,13 +2,12 @@
 import { activePage, nonActivePage } from './disable.js';
 import { similarObjects } from './app.js';
 import { createBalloon } from './ballon.js';
+import { typeHouseFilter, filterType } from './filters.js';
 
 nonActivePage();
 
 const address = document.querySelector('#address');
 address.value = '35.68596, 139.729518';
-const typeHouseFilter = document.querySelector('#housing-type');
-const typeHouseFilterValues = Array.from(typeHouseFilter.children);
 
 const map = L.map('map-canvas')
   .setView({
@@ -54,25 +53,26 @@ mainPinMarker.on('moveend', (evt) => {
   const object = evt.target.getLatLng();
   address.value = `${object.lat.toFixed(5)}, ${object.lng.toFixed(5)}`;
 });
+const markers = [];
 
-function createUsualMarkers() {
-  similarObjects.forEach((element) => {
-    let latValue = element.address.lat;
-    let lngValue = element.address.lng;
-    let marker = L.marker(
-      {
-        lat: latValue,
-        lng: lngValue
-      },
-      {
-        draggable: true,
-        icon: usualPinIcon
-      }
-    );
-    marker.addTo(map).bindPopup(createBalloon(element));
-  });
-}
+similarObjects.forEach((element) => {
+  let marker = L.marker(
+    {
+      lat: element.address.lat,
+      lng: element.address.lng
+    },
+    {
+      draggable: true,
+      icon: usualPinIcon
+    }
+  );
+  marker.addTo(map).bindPopup(createBalloon(element));
+  markers.push(marker);
+});
 
-createUsualMarkers();
+export {markers, map};
 
-export {createBalloon};
+// Фильтрация
+
+typeHouseFilter.addEventListener('change', filterType);
+
