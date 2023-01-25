@@ -17,7 +17,7 @@ const getOffer = () => ({
   photo: getRandomArrayElement(PHOTOS),
   price: getRandomPositiveInteger(0, 100000),
   rooms: getRandomPositiveInteger(1, 5),
-  guests: getRandomPositiveInteger(1, 10),
+  guests: getRandomPositiveInteger(1, 5),
   description: getRandomArrayElement(DESCRIPTION)
 });
 

@@ -2,7 +2,7 @@
 import { activePage, nonActivePage } from './disable.js';
 import { similarObjects } from './app.js';
 import { createBalloon } from './ballon.js';
-import { typeHouseFilter, filterType, typePriceFilter, filterPrice, typePriceFilterList } from './filters.js';
+import { typeHouseFilter, filterType, typePriceFilter, filterPrice, filterCapacity, typeCapacityFilter, filterPersons, typePersonsFilter} from './filters.js';
 
 nonActivePage();
 
@@ -76,4 +76,5 @@ export {markers, map};
 
 typeHouseFilter.addEventListener('change', filterType);
 typePriceFilter.addEventListener('change', filterPrice);
-
+typeCapacityFilter.addEventListener('change', filterCapacity);
+typePersonsFilter.addEventListener('change', filterPersons);
