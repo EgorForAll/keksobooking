@@ -8,7 +8,7 @@ const createBalloon = (element) => {
   featureList.appendChild(featureListItem);
   balloon.querySelector('.popup__avatar').src = element.author;
   balloon.querySelector('.popup__title').textContent = element.offer.title;
-  balloon.querySelector('.popup__text--price').textContent = element.offer.price;
+  balloon.querySelector('.popup__text--price').textContent = `${element.offer.price} Руб/ночь`;
   balloon.querySelector('.popup__type').textContent = element.offer.type;
   balloon.querySelector('.popup__description').textContent = element.offer.description;
   balloon.querySelector('.popup__photo').src = element.offer.photo;

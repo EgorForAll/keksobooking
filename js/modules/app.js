@@ -15,7 +15,7 @@ const getOffer = () => ({
   checkout: getRandomArrayElement(CHECKOUT),
   features: getRandomArrayElement(FEATURES),
   photo: getRandomArrayElement(PHOTOS),
-  price: `${getRandomPositiveInteger(0, 10000) } Руб/ночь`,
+  price: getRandomPositiveInteger(0, 100000),
   rooms: getRandomPositiveInteger(1, 5),
   guests: getRandomPositiveInteger(1, 10),
   description: getRandomArrayElement(DESCRIPTION)
