@@ -2,12 +2,13 @@
 import { activePage, nonActivePage } from './disable.js';
 import { similarObjects } from './app.js';
 import { createBalloon } from './ballon.js';
-import { typeHouseFilter, filterType, typePriceFilter, filterPrice, filterCapacity, typeCapacityFilter, filterPersons, typePersonsFilter} from './filters.js';
+import { typeHouseFilter, filterType, typePriceFilter, filterPrice, filterCapacity, typeCapacityFilter, filterPersons, typePersonsFilter, checkboxFilter} from './filters.js';
 
 nonActivePage();
 
 const address = document.querySelector('#address');
 address.value = '35.68596, 139.729518';
+const mapFeatures = document.querySelector('#housing-features');
 
 const map = L.map('map-canvas')
   .setView({
@@ -73,8 +74,9 @@ similarObjects.forEach((element) => {
 export {markers, map};
 
 // Фильтрация
-
 typeHouseFilter.addEventListener('change', filterType);
 typePriceFilter.addEventListener('change', filterPrice);
 typeCapacityFilter.addEventListener('change', filterCapacity);
 typePersonsFilter.addEventListener('change', filterPersons);
+mapFeatures.addEventListener('click', checkboxFilter);
+

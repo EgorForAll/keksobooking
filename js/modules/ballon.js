@@ -3,9 +3,16 @@ const template = document.querySelector('#card').content.querySelector('.popup')
 const createBalloon = (element) => {
   let balloon = template.cloneNode(true);
   let featureList = balloon.querySelector('.popup__features');
-  let featureListItem = balloon.querySelector('.popup__feature--' + element.offer.features);
+  let arr = element.offer.features;
+  let newArr = [];
+  for (let i = 0; i < arr.length; i++) {
+    let featureListItem = featureList.querySelector('.popup__feature--' + arr[i]);
+    newArr.push(featureListItem);
+  };
   featureList.innerHTML = '';
-  featureList.appendChild(featureListItem);
+  newArr.forEach(item => {
+    featureList.appendChild(item);
+  });
   balloon.querySelector('.popup__avatar').src = element.author;
   balloon.querySelector('.popup__title').textContent = element.offer.title;
   balloon.querySelector('.popup__text--price').textContent = `${element.offer.price} Руб/ночь`;

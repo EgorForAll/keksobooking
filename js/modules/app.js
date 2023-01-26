@@ -13,7 +13,7 @@ const getOffer = () => ({
   type: getRandomArrayElement(TYPE),
   checkin: getRandomArrayElement(CHECKIN),
   checkout: getRandomArrayElement(CHECKOUT),
-  features: getRandomArrayElement(FEATURES),
+  features: [getRandomArrayElement(FEATURES), getRandomArrayElement(FEATURES)],
   photo: getRandomArrayElement(PHOTOS),
   price: getRandomPositiveInteger(0, 100000),
   rooms: getRandomPositiveInteger(1, 5),
@@ -35,6 +35,5 @@ const generalObject = function() {
 };
 
 const similarObjects = Array.from({length: 9}, generalObject);
-
 export {similarObjects};
 
