@@ -1,11 +1,14 @@
+import { priceSlider } from './slider.js';
+
 const nonActivePage = () => {
   document.querySelector('.ad-form').classList.add('ad-form--disabled');
   document.querySelector('.ad-form-header').setAttribute('disabled', '');
   document.querySelector('.map__filters').classList.add('ad-form--disabled');
   const formElements = document.querySelectorAll('.ad-form__element');
   formElements.forEach((element) => {
-    element.setAttribute('disabled', ' ');
+    element.setAttribute('disabled', true);
   });
+  priceSlider.setAttribute('disabled', true);
 };
 
 const activePage = () => {
@@ -14,8 +17,9 @@ const activePage = () => {
   document.querySelector('.map__filters').classList.remove('ad-form--disabled');
   const formElements = document.querySelectorAll('.ad-form__element');
   formElements.forEach((element) => {
-    element.removeAttribute('disabled', ' ');
+    element.removeAttribute('disabled', true);
   });
+  priceSlider.removeAttribute('disabled', true);
 };
 
 export {activePage, nonActivePage};
