@@ -1,36 +1,4 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-import { TYPE } from './dates.js';
-
-const canvas = document.querySelector('.map__canvas');
-const popup = document.querySelector('.popup');
-
 const form = document.querySelector('.ad-form');
-
-// Сообщение об успешном опубликовании объявления
-const successTemplate = document.querySelector('#success');
-const templateClone = successTemplate.cloneNode(true);
-const successDiv = templateClone.content.querySelector('.success');
-
-const isEscapeKey = (evt) => {
-  return evt.key === 'Escape';
-};
-
-const onSuccessPushClose = (evt) => {
-  evt.preventDefault();
-  document.querySelector('body').removeChild(successDiv);
-};
-
-const successPushOpened = () => {
-  document.querySelector('body').appendChild(successDiv);
-  document.addEventListener('keydown', onSuccessPushClose);
-  document.addEventListener('click', onSuccessPushClose);
-};
-
-const successPushClosed = () => {
-  document.removeEventListener('keydown', onSuccessPushClose);
-  document.removeEventListener('click', onSuccessPushClose);
-};
 
 // Валидация формы
 const pristine = new Pristine(form, {
@@ -56,6 +24,14 @@ pristine.addValidator(form.querySelector('#title'),
 // Валидация цены
 const type = form.querySelector('#type');
 const price = form.querySelector('#price');
+
+const TYPE = [
+  'bungalow',
+  'flat',
+  'hotel',
+  'house',
+  'palace'
+];
 
 function validatePrice() {
   if (type.value === TYPE[1]) {
