@@ -158,6 +158,12 @@ pristine.addValidator(timeOut,
 
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  pristine.validate();
+
+  const isValid = pristine.validate();
+  if (isValid) {
+    console.log('збс');
+  } else {
+    console.log('не збс');
+  }
 });
 

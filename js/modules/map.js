@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 import { activePage, nonActivePage } from './disable.js';
-import { similarObjects } from './app.js';
 import { createBalloon } from './ballon.js';
 import { filterAll } from './filters.js';
 
@@ -56,23 +55,26 @@ mainPinMarker.on('moveend', (evt) => {
 });
 const markers = [];
 
-similarObjects.forEach((element) => {
-  let marker = L.marker(
-    {
-      lat: element.address.lat,
-      lng: element.address.lng
-    },
-    {
-      draggable: true,
-      icon: usualPinIcon
-    }
-  );
-  marker.addTo(map).bindPopup(createBalloon(element));
-  markers.push(marker);
-});
-
+const renderMap = function(markers) {
+  markers.forEach((element) => {
+    let marker = L.marker(
+      {
+        lat: element.location.lat,
+        lng: element.location.lng
+      },
+      {
+        draggable: true,
+        icon: usualPinIcon
+      }
+    );
+    marker.addTo(map).bindPopup(createBalloon(element));
+    markers.push(marker);
+  });
+};
 export {markers, map};
 
 // Фильтрация
 
 mapFilters.addEventListener('change', filterAll);
+
+export {renderMap};
