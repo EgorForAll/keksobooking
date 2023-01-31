@@ -668,6 +668,7 @@ fieldset {
 
 .form__error {
   display: block;
+  color: #c23613;
 }
 
 

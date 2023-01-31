@@ -89,8 +89,20 @@ function validateCapacity() {
   return capacity.value <= capacityAbility[roomNumber.value];
 };
 
-pristine.addValidator(capacity,
-  validateCapacity
+function errorPersons() {
+  if (roomNumber.value === '1' && capacity.value > '1') {
+    return 'не более 1 человека на 1 комнату';
+  } else if (roomNumber.value === '2' && capacity.value > '2') {
+    return 'не более 2 человек на 2 комнаты';
+  } else if (roomNumber.value === '3' && capacity.value > '2') {
+    return 'не более 3 человек на 3 комнаты';
+  } else if (roomNumber.value === '100' && capacity.value !== '0') {
+    return '100 комнат не для гостей';
+  }
+}
+pristine.addValidator(roomNumber,
+  validateCapacity,
+  errorPersons
 );
 
 // Валидация времени заезда, выезда
