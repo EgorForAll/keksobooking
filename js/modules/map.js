@@ -53,7 +53,7 @@ mainPinMarker.on('moveend', (evt) => {
   const object = evt.target.getLatLng();
   address.value = `${object.lat.toFixed(5)}, ${object.lng.toFixed(5)}`;
 });
-const markers = [];
+const markersArr = [];
 
 const renderMap = function(markers) {
   markers.forEach((element) => {
@@ -68,13 +68,14 @@ const renderMap = function(markers) {
       }
     );
     marker.addTo(map).bindPopup(createBalloon(element));
-    markers.push(marker);
+    markersArr.push(marker);
   });
 };
-export {markers, map};
+
+export {markersArr, map};
 
 // Фильтрация
 
 mapFilters.addEventListener('change', filterAll);
 
-export {renderMap};
+export { renderMap};

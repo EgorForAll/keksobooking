@@ -1,4 +1,4 @@
-import { markers, map } from './map.js';
+import { map, markersArr } from './map.js';
 
 const typeHouseFilter = document.querySelector('#housing-type');
 const typeHouseFilterList = typeHouseFilter.children;
@@ -123,13 +123,14 @@ function checkboxFilter(marker) {
 };
 
 function filterAll(evt) {
-  markers.forEach(marker => {
+  markersArr.forEach(marker => {
     evt.target === typeHouseFilter ? filterType(marker) :
       evt.target === typePriceFilter ? filterPrice(marker) :
         evt.target === typeCapacityFilter ? filterCapacity(marker) :
           evt.target === typePersonsFilter ? filterPersons(marker) :
             checkboxFilter(marker);
   });
+
 }
 
 export {filterAll};

@@ -1,5 +1,4 @@
-import { FEATURES } from './dates.js';
-
+/* eslint-disable no-undef */
 // Случайное целое число
 function getRandomPositiveInteger(a, b) {
   const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
@@ -22,7 +21,6 @@ const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0,
 
 const clearFields = () => {
   document.querySelector('#title').value = '';
-  document.querySelector('#address').value = '';
   document.querySelector('#price').value = '';
   document.querySelector('#description').value = '';
   document.querySelector('#type').selectedIndex = 1;
@@ -30,12 +28,24 @@ const clearFields = () => {
   document.querySelector('#timeout').selectedIndex = 0;
   document.querySelector('#room_number').selectedIndex = 0;
   document.querySelector('#capacity').selectedIndex = 0;
-  for (let i = 0; i < FEATURES.length; i++) {
-    let featureItem = document.querySelector(`#feature-${FEATURES[i]}`);
-    featureItem.checked = false;
-  }
+  document.querySelector('#feature-wifi').checked = false;
+  document.querySelector('#feature-dishwasher').checked = false;
+  document.querySelector('#feature-washer').checked = false;
+  document.querySelector('#feature-parking').checked = false;
+  document.querySelector('#feature-elevator').checked = false;
+  document.querySelector('#feature-conditioner').checked = false;
+  document.querySelector('#address').value = '35.68596, 139.729518';
+};
+
+// Модальный окна
+const isEscapeKey = (evt) => {
+  return evt.key === 'Escape';
+};
+
+const isEnterKey = (evt) => {
+  return evt.key === 'Enter';
 };
 
 export {getRandomArrayElement};
 export {getRandomPositiveFloat, getRandomPositiveInteger};
-export {clearFields};
+export {clearFields, isEnterKey, isEscapeKey};

@@ -1,6 +1,10 @@
+import { openErrorModal } from './modal-windows.js';
+import { sendData } from './api.js';
+
 const form = document.querySelector('.ad-form');
 
 // Валидация формы
+// eslint-disable-next-line no-undef
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
   errorClass: 'form__item--invalid',
@@ -132,14 +136,25 @@ pristine.addValidator(timeOut,
   validateTimeOut
 );
 
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
+const setUserFormSubmit = (onSuccess) => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      sendData(
+        () => {
+          onSuccess();
+          document.querySelector('.ad-form__submit').setAttribute('disabled', true);
+        },
+        () => {
+          openErrorModal();
+          document.querySelector('.ad-form__submit').removeAttribute('disabled', true);
+        },
+        // eslint-disable-next-line no-undef
+        new FormData(evt.target)
+      );
+    }
+  });
+};
 
-  const isValid = pristine.validate();
-  if (isValid) {
-    console.log('збс');
-  } else {
-    console.log('не збс');
-  }
-});
-
+export {setUserFormSubmit};

@@ -5,5 +5,9 @@ import './modules/slider.js';
 import './modules/api.js';
 import { getData } from './modules/api.js';
 import { renderMap } from './modules/map.js';
+import { setUserFormSubmit } from './modules/form.js';
+import { openSuccessModal } from './modules/modal-windows.js';
 
 getData(renderMap);
+
+setUserFormSubmit(openSuccessModal);

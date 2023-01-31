@@ -17,6 +17,7 @@ const createBalloon = (element) => {
   } else {
     featureList.innerText = '';
   }
+  balloon.querySelector('.popup__text--address').textContent = element.offer.address;
   balloon.querySelector('.popup__avatar').src = element.author.avatar;
   balloon.querySelector('.popup__title').textContent = element.offer.title;
   balloon.querySelector('.popup__text--price').textContent = `${element.offer.price} Руб/ночь`;
