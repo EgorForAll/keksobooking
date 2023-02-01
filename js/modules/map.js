@@ -78,4 +78,4 @@ export {markersArr, map};
 
 mapFilters.addEventListener('change', filterAll);
 
-export { renderMap};
+export { renderMap };

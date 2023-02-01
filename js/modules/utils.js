@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 // Случайное целое число
+
 function getRandomPositiveInteger(a, b) {
   const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
   const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
@@ -20,6 +21,16 @@ const getRandomArrayElement = (elements) => elements[getRandomPositiveInteger(0,
 // Очистка полей формы
 
 const clearFields = () => {
+  document.querySelector('#housing-type').selectedIndex = 0;
+  document.querySelector('#housing-price').selectedIndex = 0;
+  document.querySelector('#housing-rooms').selectedIndex = 0;
+  document.querySelector('#housing-guests').selectedIndex = 0;
+  document.querySelector('#filter-wifi').checked = false;
+  document.querySelector('#filter-dishwasher').checked = false;
+  document.querySelector('#filter-washer').checked = false;
+  document.querySelector('#filter-parking').checked = false;
+  document.querySelector('#filter-elevator').checked = false;
+  document.querySelector('#filter-conditioner').checked = false;
   document.querySelector('#title').value = '';
   document.querySelector('#price').value = '';
   document.querySelector('#description').value = '';
@@ -35,6 +46,7 @@ const clearFields = () => {
   document.querySelector('#feature-elevator').checked = false;
   document.querySelector('#feature-conditioner').checked = false;
   document.querySelector('#address').value = '35.68596, 139.729518';
+  document.querySelector('.leaflet-popup-pane').innerHTML = '';
 };
 
 // Модальный окна
