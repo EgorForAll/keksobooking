@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 import { activePage, nonActivePage } from './disable.js';
 import { createBalloon } from './ballon.js';
-import { filterAll } from './filters.js';
 
 nonActivePage();
 
@@ -53,29 +52,32 @@ mainPinMarker.on('moveend', (evt) => {
   const object = evt.target.getLatLng();
   address.value = `${object.lat.toFixed(5)}, ${object.lng.toFixed(5)}`;
 });
-const markersArr = [];
+let markersArr = [];
 
-const renderMap = function(markers) {
-  markers.forEach((element) => {
-    let marker = L.marker(
-      {
-        lat: element.location.lat,
-        lng: element.location.lng
-      },
-      {
-        draggable: true,
-        icon: usualPinIcon
-      }
-    );
-    marker.addTo(map).bindPopup(createBalloon(element));
-    markersArr.push(marker);
-  });
+const POINTERS_COUNT = 10;
+const typeHouseFilter = document.querySelector('#housing-type');
+
+const renderMap = (markers) => {
+  markers.slice(0, POINTERS_COUNT)
+    .forEach((element) => {
+      let marker = L.marker(
+        {
+          lat: element.location.lat,
+          lng: element.location.lng
+        },
+        {
+          draggable: true,
+          icon: usualPinIcon
+        }
+      );
+      marker.addTo(map).bindPopup(createBalloon(element));
+      markersArr.push(marker);
+    });
 };
-
 export {markersArr, map};
 
 // Фильтрация
 
-mapFilters.addEventListener('change', filterAll);
+// mapFilters.addEventListener('change', filterAll);
 
 export { renderMap };

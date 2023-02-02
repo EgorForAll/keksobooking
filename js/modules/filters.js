@@ -14,9 +14,9 @@ const checkboxWasher = document.querySelector('#filter-washer');
 const checkboxParking = document.querySelector('#filter-parking');
 const checkboxElevator = document.querySelector('#filter-elevator');
 const checkboxConditioner = document.querySelector('#filter-conditioner');
+const featuresField = document.querySelector('#housing-features');
 
 // Фильтрация по типу помещения
-
 function filterType(marker) {
   if (typeHouseFilter.value === typeHouseFilterList[5].value && marker._popup._content.children[4].textContent !== 'palace') {
     marker.remove();
@@ -31,7 +31,13 @@ function filterType(marker) {
   } else {
     marker.addTo(map);
   }
-};
+}
+
+function setFilterType() {
+  markersArr.filter((marker) => filterType(marker));
+}
+
+typeHouseFilter.addEventListener('change', setFilterType);
 
 // Фильтрация по цене
 
@@ -50,6 +56,12 @@ function filterPrice(marker) {
   }
 };
 
+function setFilterPrice() {
+  markersArr.filter((marker) => filterPrice(marker));
+}
+
+typePriceFilter.addEventListener('change', setFilterPrice);
+
 // Фильтрация по количеству  комнат
 
 function filterCapacity(marker) {
@@ -67,6 +79,12 @@ function filterCapacity(marker) {
   }
 }
 
+function setFilterCapacity(marker) {
+  markersArr.filter((marker) => filterCapacity(marker));
+}
+
+typeCapacityFilter.addEventListener('change', setFilterCapacity);
+
 // Фильтрация по количеству гостей
 
 function filterPersons(marker) {
@@ -79,10 +97,16 @@ function filterPersons(marker) {
     marker.remove();
   } else if (typePersonsFilter.value === typePersonsList[1].value && numberFromStr !== 2) {
     marker.remove();
-  } else {
+  } else if (typePersonsFilter.value === typePersonsList[0].value) {
     marker.addTo(map);
   }
 };
+
+function setFilterPerson(marker) {
+  markersArr.filter((marker) => filterPersons(marker));
+}
+
+typePersonsFilter.addEventListener('change', setFilterPerson);
 
 // Фильтрация по удобствам
 
@@ -117,20 +141,13 @@ function checkboxFilter(marker) {
     marker.remove();
   } else if (checkboxConditioner.checked === true && classNameConditioner !== true) {
     marker.remove();
-  } else {
+  } else if (checkboxDishwasher.checked === false && checkboxWifi.checked === false && checkboxWasher.checked === false && checkboxParking.checked === false && checkboxElevator.checked === false && checkboxConditioner.checked === false) {
     marker.addTo(map);
   }
 };
 
-function filterAll(evt) {
-  markersArr.forEach(marker => {
-    evt.target === typeHouseFilter ? filterType(marker) :
-      evt.target === typePriceFilter ? filterPrice(marker) :
-        evt.target === typeCapacityFilter ? filterCapacity(marker) :
-          evt.target === typePersonsFilter ? filterPersons(marker) :
-            checkboxFilter(marker);
-  });
-
+function setCheckboxFilter(marker) {
+  markersArr.filter((marker) => checkboxFilter(marker));
 }
 
-export {filterAll};
+featuresField.addEventListener('change', setCheckboxFilter);
