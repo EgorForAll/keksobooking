@@ -1,12 +1,14 @@
 /* eslint-disable no-undef */
 import { activePage, nonActivePage } from './disable.js';
 import { createBalloon } from './ballon.js';
+import { setTypeFilter, setPriceFilter, setCapacityFilter, setPersonFilter, checkboxFilter } from './filters.js';
+import { getRandomArrayElement } from './utils.js';
 
 nonActivePage();
 
+const mapFilters = document.querySelector('.map__filters');
 const address = document.querySelector('#address');
 address.value = '35.68596, 139.729518';
-const mapFilters = document.querySelector('.map__filters');
 
 const map = L.map('map-canvas')
   .setView({
@@ -52,32 +54,56 @@ mainPinMarker.on('moveend', (evt) => {
   const object = evt.target.getLatLng();
   address.value = `${object.lat.toFixed(5)}, ${object.lng.toFixed(5)}`;
 });
-let markersArr = [];
 
 const POINTERS_COUNT = 10;
-const typeHouseFilter = document.querySelector('#housing-type');
+const markersArr = [];
 
-const renderMap = (markers) => {
-  markers.slice(0, POINTERS_COUNT)
-    .forEach((element) => {
-      let marker = L.marker(
-        {
-          lat: element.location.lat,
-          lng: element.location.lng
-        },
-        {
-          draggable: true,
-          icon: usualPinIcon
-        }
-      );
-      marker.addTo(map).bindPopup(createBalloon(element));
-      markersArr.push(marker);
-    });
+const renderMap = (element) => {
+  let pointer = L.marker(
+    {
+      lat: element.location.lat,
+      lng: element.location.lng
+    },
+    {
+      draggable: true,
+      icon: usualPinIcon
+    }
+  );
+
+  mainPinMarker.addTo(map);
+  pointer.addTo(map).bindPopup(createBalloon(element));
 };
-export {markersArr, map};
+
+function getMarkers(markers) {
+  for (let i = 0; i < POINTERS_COUNT; i++) {
+    markersArr.push((getRandomArrayElement(markers)));
+  };
+  markersArr.forEach(item => renderMap(item));
+}
+
+mapFilters.addEventListener('change', function(evt) {
+  if (evt.target) {
+    const pane = document.querySelector('.map__canvas').children[0].children[3];
+    pane.innerHTML = '';
+    let newArr = markersArr
+      .filter(marker => setTypeFilter(marker) && setPriceFilter(marker) && setCapacityFilter(marker) && setPersonFilter(marker) && checkboxFilter(marker))
+      .forEach((element) => {
+        let pointer = L.marker(
+          {
+            lat: element.location.lat,
+            lng: element.location.lng
+          },
+          {
+            draggable: true,
+            icon: usualPinIcon
+          }
+        );
+        pointer.addTo(map).bindPopup(createBalloon(element));
+      }
+      );
+  }
+});
 
 // Фильтрация
 
-// mapFilters.addEventListener('change', filterAll);
-
-export { renderMap };
+export { getMarkers };
