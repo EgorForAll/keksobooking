@@ -6,13 +6,8 @@ const typeCapacityFilter = document.querySelector('#housing-rooms');
 const typeCapacityFilterList = typeCapacityFilter.children;
 const typePersonFilter = document.querySelector('#housing-guests');
 const typePersonFilterList = typePersonFilter.children;
-const wifiCheckbox = document.querySelector('#filter-wifi');
-const dishwasherCheckbox = document.querySelector('#filter-dishwasher');
-const washerCheckbox = document.querySelector('#filter-washer');
-const parkingCheckbox = document.querySelector('#filter-parking');
-const elevatorCheckbox = document.querySelector('#filter-elevator');
-const conditionerCheckbox = document.querySelector('#filter-conditioner');
-const checkboxField = document.querySelector('#housing-features');
+const mapFilters = document.querySelector('.map__filters');
+const featuresFilter = mapFilters.querySelectorAll('.map__checkbox');
 
 function setTypeFilter(marker) {
   if (marker.offer.type === 'palace' && typeHouseFilter.value === typeHouseFilterList[5].value) {
@@ -67,23 +62,16 @@ function setPersonFilter(marker) {
   }
 }
 
-function checkboxFilter(marker) {
-  if (marker.offer.hasOwnProperty('features') && wifiCheckbox.checked === true && marker.offer.features.includes('wifi')) {
-    return true;
-  } else if (dishwasherCheckbox.checked === true && marker.offer.features.includes('dishwasher')) {
-    return true;
-  } else if (washerCheckbox.checked === true && marker.offer.features.includes('washer')) {
-    return true;
-  } else if (elevatorCheckbox.checked === true && marker.offer.features.includes('elevator')) {
-    return true;
-  } else if (parkingCheckbox.checked === true && marker.offer.features.includes('parking')) {
-    return true;
-  } else if (conditionerCheckbox.checked === true && marker.offer.features.includes('conditioner')) {
-    return true;
-  } else {
-    return true;
-  }
-}
+const checkboxFilter = (marker) => Array.from(featuresFilter)
+  .every((filterFeature) => {
+    if (!filterFeature.checked) {
+      return true;
+    }
+    if (!marker.offer.features) {
+      return false;
+    }
+    return marker.offer.features.includes(filterFeature.value);
+  });
 
 export {setTypeFilter, setPriceFilter, setCapacityFilter};
 export {setPersonFilter, checkboxFilter};
