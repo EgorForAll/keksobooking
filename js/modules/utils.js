@@ -58,6 +58,16 @@ const isEnterKey = (evt) => {
   return evt.key === 'Enter';
 };
 
+// Устранения дребезга
+
+function debounce(callback, timeoutDelay) {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+
 export {getRandomArrayElement};
 export {getRandomPositiveFloat, getRandomPositiveInteger};
-export {clearFields, isEnterKey, isEscapeKey};
+export {clearFields, isEnterKey, isEscapeKey, debounce};

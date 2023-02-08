@@ -2,7 +2,7 @@
 import { activePage, nonActivePage } from './disable.js';
 import { createBalloon } from './ballon.js';
 import { setTypeFilter, setPriceFilter, setCapacityFilter, setPersonFilter, checkboxFilter } from './filters.js';
-import { getRandomArrayElement } from './utils.js';
+import { getRandomArrayElement, debounce } from './utils.js';
 
 nonActivePage();
 
@@ -24,6 +24,9 @@ L.tileLayer(
 ).addTo(map);
 
 map.addEventListener('load', activePage());
+
+// Создание слоя с группой меток
+const markerGroup = L.layerGroup().addTo(map);
 
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
@@ -48,7 +51,7 @@ const mainPinMarker = L.marker(
   }
 );
 
-mainPinMarker.addTo(map);
+mainPinMarker.addTo(markerGroup);
 
 mainPinMarker.on('moveend', (evt) => {
   const object = evt.target.getLatLng();
@@ -69,10 +72,14 @@ const renderMap = (element) => {
       icon: usualPinIcon
     }
   );
-
-  mainPinMarker.addTo(map);
-  pointer.addTo(map).bindPopup(createBalloon(element));
+  mainPinMarker.addTo(markerGroup);
+  pointer.addTo(markerGroup).bindPopup(createBalloon(element), {
+    keepInView: true
+  });
 };
+
+// Очищение слоя с метками объявлений
+const clearMarker = () => markerGroup.clearLayers();
 
 function getMarkers(markers) {
   for (let i = 0; i < POINTERS_COUNT; i++) {
@@ -81,29 +88,25 @@ function getMarkers(markers) {
   markersArr.forEach(item => renderMap(item));
 }
 
-mapFilters.addEventListener('change', function(evt) {
-  if (evt.target) {
-    const pane = document.querySelector('.map__canvas').children[0].children[3];
-    pane.innerHTML = '';
-    let newArr = markersArr
-      .filter(marker => setTypeFilter(marker) && setPriceFilter(marker) && setCapacityFilter(marker) && setPersonFilter(marker) && checkboxFilter(marker))
-      .forEach((element) => {
-        let pointer = L.marker(
-          {
-            lat: element.location.lat,
-            lng: element.location.lng
-          },
-          {
-            draggable: true,
-            icon: usualPinIcon
-          }
-        );
-        pointer.addTo(map).bindPopup(createBalloon(element));
-      }
-      );
-  }
-});
-
 // Фильтрация
+function setFilterAll() {
+  clearMarker();
+  let newArr = markersArr
+    .filter(marker => setTypeFilter(marker) && setPriceFilter(marker) && setCapacityFilter(marker) && setPersonFilter(marker) && checkboxFilter(marker));
+  newArr.forEach((element) => renderMap(element), 500);
+}
+
+const filterAll = (cb) => {
+  mapFilters.addEventListener('change', function(evt) {
+    if (evt.target) {
+      cb();
+    }
+  });
+};
+
+// Вешаем debounce
+const TIMEOUT_DELAY = 500;
+
+filterAll(debounce(setFilterAll, TIMEOUT_DELAY));
 
 export { getMarkers };
