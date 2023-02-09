@@ -4,12 +4,12 @@ const priceElement = document.querySelector('#price');
 // eslint-disable-next-line no-undef
 noUiSlider.create(priceSlider, {
   range: {
-    min: 1000,
+    min: 0,
     max: 100000
   },
   step: 100,
   connect: 'lower',
-  start: 1000,
+  start: 0,
   format: {
     to: function(value) {
       if (Number.isInteger(value)) {

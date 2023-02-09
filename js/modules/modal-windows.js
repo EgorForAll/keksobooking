@@ -8,7 +8,7 @@ function openSuccessModal() {
   const onClickModal = () => document.querySelector('body').removeChild(template);
   document.addEventListener('click', onClickModal, {once: true});
   document.addEventListener('keydown', function(evt) {
-    if (isEscapeKey(evt)) {
+    if (evt.key === 'Escape') {
       evt.preventDefault();
       onClickModal();
     }

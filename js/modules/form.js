@@ -155,8 +155,8 @@ const setUserFormSubmit = (onSuccess) => {
     if (isValid) {
       sendData(
         () => {
-          onSuccess();
           document.querySelector('.ad-form__submit').setAttribute('disabled', true);
+          onSuccess();
         },
         () => {
           openErrorModal();
