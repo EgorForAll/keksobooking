@@ -21,16 +21,15 @@ const sendData = (onSuccess, onFail, body) => {
     'https://25.javascript.pages.academy/keksobooking',
     {
       method: 'POST',
-      mode: 'cors',
       body
     }
   )
     .then((response) => {
       if (response.ok) {
         onSuccess();
+      } else {
+        onFail();
       }
-
-      throw new Error(`${response.status} ${response.statusText}`);
     })
     .catch(() => {
       onFail();

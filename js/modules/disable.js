@@ -22,6 +22,7 @@ const activePage = () => {
     element.removeAttribute('disabled', true);
   });
   priceSlider.removeAttribute('disabled', true);
+  document.querySelector('#address').setAttribute('disabled', true);
 };
 
 export {activePage, nonActivePage};

@@ -152,6 +152,7 @@ const setUserFormSubmit = (onSuccess) => {
     evt.preventDefault();
     const isValid = pristine.validate();
     if (isValid) {
+      document.querySelector('#address').removeAttribute('disabled', true);
       sendData(
         () => {
           document.querySelector('.ad-form__submit').setAttribute('disabled', true);
