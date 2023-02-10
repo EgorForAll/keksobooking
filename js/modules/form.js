@@ -1,5 +1,6 @@
 import { openErrorModal } from './modal-windows.js';
 import { sendData } from './api.js';
+import { priceSlider } from './slider.js';
 
 const form = document.querySelector('.ad-form');
 
@@ -15,7 +16,6 @@ const pristine = new Pristine(form, {
 });
 
 // Валидация заголовка
-
 function validateNickname(value) {
   return value.length >= 30 && value.length <= 100;
 }
@@ -37,23 +37,30 @@ const TYPE = [
   'palace'
 ];
 
-function validatePrice() {
+function validatePricePlaceholder() {
   if (type.value === TYPE[1]) {
-    price.placeholder = 1000;
-    return price.value >= 1000;
+    priceSlider.noUiSlider.set(1000);
   } else if (type.value === TYPE[2]) {
-    price.placeholder = 3000;
-    return price.value >= 3000;
+    priceSlider.noUiSlider.set(3000);
   } else if (type.value === TYPE[3]) {
-    price.placeholder = 5000;
-    return price.value >= 5000;
+    priceSlider.noUiSlider.set(5000);
   } else if (type.value === TYPE[4]) {
-    price.placeholder = 10000;
-    return price.value >= 10000;
-  } else {
-    price.placeholder = 0;
+    priceSlider.noUiSlider.set(10000);
+
   }
 };
+
+function validatePriceValue() {
+  if (type.value === TYPE[1]) {
+    return price.value >= 1000;
+  } else if (type.value === TYPE[2]) {
+    return price.value >= 3000;
+  } else if (type.value === TYPE[3]) {
+    return price.value >= 5000;
+  } else if (type.value === TYPE[4]) {
+    return price.value >= 10000;
+  }
+}
 
 function errorMessage() {
   if (type.value === TYPE[1]) {
@@ -67,10 +74,11 @@ function errorMessage() {
   }
 }
 
-type.addEventListener('click', validatePrice);
+type.addEventListener('change', validatePricePlaceholder);
 
-pristine.addValidator(form.querySelector('#price'),
-  validatePrice,
+pristine.addValidator(
+  price,
+  validatePriceValue,
   errorMessage
 );
 
@@ -110,21 +118,12 @@ const timeIn = form.querySelector('#timein');
 const timeOut = form.querySelector('#timeout');
 const timeInList = Array.from(timeIn.children);
 const timeOutList = Array.from(timeOut.children);
-const timeInArray = [];
-const timeOutArray = [];
-timeInList.forEach((item) => {
-  timeInArray.push(item.value);
-});
-
-timeOutList.forEach((item) => {
-  timeOutArray.push(item.value);
-});
 
 function validateTimeIn() {
 
-  for (let i = 0; i < timeInArray.length; i++) {
-    if (timeIn.value === timeInArray[i]) {
-      timeOut.value = timeOutArray[i];
+  for (let i = 0; i < timeInList.length; i++) {
+    if (timeIn.value === timeInList[i].value) {
+      timeOut.value = timeOutList[i].value;
       return timeIn.value === timeOut.value;
     }
   }
@@ -132,9 +131,9 @@ function validateTimeIn() {
 
 function validateTimeOut() {
 
-  for (let i = 0; i < timeOutArray.length; i++) {
-    if (timeOut.value === timeOutArray[i]) {
-      timeIn.value = timeInArray[i];
+  for (let i = 0; i < timeOutList.length; i++) {
+    if (timeOut.value === timeOutList[i].value) {
+      timeIn.value = timeInList[i].value;
       return timeOut.value === timeIn.value;
     }
   }

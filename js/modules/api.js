@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const getData = (onSuccess) => {
+const getData = (onSuccess, onFail) => {
   fetch('https://25.javascript.pages.academy/keksobooking/data')
     .then((response) => {
       if (response.ok) {
@@ -10,6 +10,9 @@ const getData = (onSuccess) => {
     })
     .then((markers) => {
       onSuccess(markers);
+    })
+    .catch(() => {
+      onFail();
     });
 };
 
@@ -18,15 +21,16 @@ const sendData = (onSuccess, onFail, body) => {
     'https://25.javascript.pages.academy/keksobooking',
     {
       method: 'POST',
+      mode: 'cors',
       body
     }
   )
     .then((response) => {
       if (response.ok) {
         onSuccess();
-      } else {
-        onFail();
       }
+
+      throw new Error(`${response.status} ${response.statusText}`);
     })
     .catch(() => {
       onFail();

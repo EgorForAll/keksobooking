@@ -9,6 +9,7 @@ const typePersonFilterList = typePersonFilter.children;
 const mapFilters = document.querySelector('.map__filters');
 const featuresFilter = mapFilters.querySelectorAll('.map__checkbox');
 
+// Фильтр по типу жилья
 function setTypeFilter(marker) {
   if (marker.offer.type === 'palace' && typeHouseFilter.value === typeHouseFilterList[5].value) {
     return true;
@@ -26,6 +27,7 @@ function setTypeFilter(marker) {
 
 }
 
+// Фильтр по цене
 function setPriceFilter(marker) {
   if (marker.offer.price >= 50000 && typePriceFilter.value === typePriceFilterList[3].value) {
     return true;
@@ -38,6 +40,7 @@ function setPriceFilter(marker) {
   }
 }
 
+// Фильтр по количеству комнат
 function setCapacityFilter(marker) {
   if (marker.offer.rooms === 3 && typeCapacityFilter.value === typeCapacityFilterList[3].value) {
     return true;
@@ -50,6 +53,7 @@ function setCapacityFilter(marker) {
   }
 }
 
+// Фильтр по количеству гостей
 function setPersonFilter(marker) {
   if (marker.offer.guests === 0 && typePersonFilter.value === typePersonFilterList[3].value) {
     return true;
@@ -62,6 +66,7 @@ function setPersonFilter(marker) {
   }
 }
 
+// Фильтр по чекбоксам
 const checkboxFilter = (marker) => Array.from(featuresFilter)
   .every((filterFeature) => {
     if (!filterFeature.checked) {
@@ -73,5 +78,4 @@ const checkboxFilter = (marker) => Array.from(featuresFilter)
     return marker.offer.features.includes(filterFeature.value);
   });
 
-export {setTypeFilter, setPriceFilter, setCapacityFilter};
-export {setPersonFilter, checkboxFilter};
+export {setTypeFilter, setPriceFilter, setCapacityFilter, setPersonFilter, checkboxFilter};

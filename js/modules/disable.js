@@ -1,5 +1,6 @@
 import { priceSlider } from './slider.js';
 
+// Состояние старницы с заблокированными полями формы
 const nonActivePage = () => {
   document.querySelector('.ad-form').classList.add('ad-form--disabled');
   document.querySelector('.ad-form-header').setAttribute('disabled', '');
@@ -11,6 +12,7 @@ const nonActivePage = () => {
   priceSlider.setAttribute('disabled', true);
 };
 
+// Состояние страницы с разблокированными полями формы
 const activePage = () => {
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   document.querySelector('.ad-form-header').removeAttribute('disabled', '');

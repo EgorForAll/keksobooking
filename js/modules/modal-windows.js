@@ -1,4 +1,26 @@
-import { clearFields, isEscapeKey } from './utils.js';
+import { clearFields } from './utils.js';
+
+// Сообщение об ошибке получение данных
+function openGetDataError() {
+  const errorElement = document.createElement('div');
+  errorElement.classList.add('get-data-error');
+  errorElement.style.position = 'fixed';
+  errorElement.style.zIndex = 1000;
+  errorElement.style.top = 0;
+  errorElement.style.right = 0;
+  errorElement.style.left = 0;
+  errorElement.style.paddingTop = '3px';
+  errorElement.style.paddingBottom = '3px';
+  errorElement.style.backgroundColor = 'tomato';
+  errorElement.textContent = 'Не удалось загрузить данные с сервера. Пожалуйста, попробуйте еще раз.';
+  errorElement.style.textAlign = 'center';
+  errorElement.style.color = 'white';
+  document.querySelector('body').prepend(errorElement);
+  const mapFilters = document.querySelector('.map__filters');
+  Array.from(mapFilters.children).forEach(element => {
+    element.disabled = true;
+  });
+}
 
 //Сообщение об успешной отправке данных
 
@@ -31,7 +53,7 @@ function openErrorModal() {
   },
   {once: true});
   document.addEventListener('keydown', function(evt) {
-    if (isEscapeKey(evt)) {
+    if (evt.key === 'Escape') {
       document.querySelector('body').removeChild(template);
     }
   },
@@ -39,4 +61,4 @@ function openErrorModal() {
   );
 }
 
-export {openSuccessModal, openErrorModal };
+export {openSuccessModal, openErrorModal, openGetDataError };

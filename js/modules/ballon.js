@@ -1,5 +1,6 @@
 const template = document.querySelector('#card').content.querySelector('.popup');
 
+// Создаем попап метки
 const createBalloon = (element) => {
   let balloon = template.cloneNode(true);
   let featureList = balloon.querySelector('.popup__features');

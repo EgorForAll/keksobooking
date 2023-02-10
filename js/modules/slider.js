@@ -1,6 +1,7 @@
 const priceSlider = document.querySelector('.ad-form__slider');
 const priceElement = document.querySelector('#price');
 
+// Добавляем слайдер на страницу
 // eslint-disable-next-line no-undef
 noUiSlider.create(priceSlider, {
   range: {
