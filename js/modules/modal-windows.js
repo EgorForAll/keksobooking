@@ -15,7 +15,7 @@ function openGetDataError() {
   errorElement.textContent = 'Не удалось загрузить данные с сервера. Пожалуйста, попробуйте еще раз.';
   errorElement.style.textAlign = 'center';
   errorElement.style.color = 'white';
-  document.querySelector('body').prepend(errorElement);
+  document.body.prepend(errorElement);
   const mapFilters = document.querySelector('.map__filters');
   Array.from(mapFilters.children).forEach(element => {
     element.disabled = true;
@@ -23,42 +23,50 @@ function openGetDataError() {
 }
 
 //Сообщение об успешной отправке данных
-
 function openSuccessModal() {
-  const template = document.querySelector('#success').content.querySelector('.success');
-  document.querySelector('body').appendChild(template);
-  const onClickModal = () => document.querySelector('body').removeChild(template);
-  document.addEventListener('click', onClickModal, {once: true});
-  document.addEventListener('keydown', function(evt) {
+  const template = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
+  document.body.appendChild(template);
+
+  const onClickModal = () => {
+    document.body.removeChild(template);
+    document.removeEventListener('keydown', onEsc, {once: true});
+  };
+
+  const onEsc = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      onClickModal();
+      document.body.removeChild(template);
+      document.removeEventListener('click', onClickModal, {once: true});
     }
-  }
-  , {once: true});
+  };
+
+  document.addEventListener('keydown', onEsc, {once: true});
+  document.addEventListener('click', onClickModal, {once: true});
   clearFields();
 }
-// Сообщение об ошибке отправки данных
 
+// Сообщение об ошибке отправки данных
 function openErrorModal() {
-  const template = document.querySelector('#error').content.querySelector('.error');
-  document.querySelector('body').appendChild(template);
-  const errorButton = template.querySelector('.error__button');
-  errorButton.addEventListener('click', function() {
-    document.querySelector('body').removeChild(template);
-  },
-  {once: true});
-  document.addEventListener('click', function() {
-    document.querySelector('body').removeChild(template);
-  },
-  {once: true});
-  document.addEventListener('keydown', function(evt) {
+  const template = document.querySelector('#error');
+  const errorBlock = template.content.querySelector('.error').cloneNode(true);
+  document.body.appendChild(errorBlock);
+  const errorButton = errorBlock.querySelector('.error__button');
+
+  const outOfErrorWindow = () => {
+    document.body.removeChild(errorBlock);
+    document.removeEventListener('keydown', onEsc, {once: true});
+  };
+
+  const onEsc = (evt) => {
     if (evt.key === 'Escape') {
-      document.querySelector('body').removeChild(template);
+      document.body.removeChild(errorBlock);
+      document.removeEventListener('click', outOfErrorWindow, {once: true});
     }
-  },
-  {once: true}
-  );
+  };
+
+  errorButton.addEventListener('click', outOfErrorWindow, {once: true});
+  document.addEventListener('click', outOfErrorWindow, {once: true});
+  document.addEventListener('keydown', onEsc, {once: true});
 }
 
 export {openSuccessModal, openErrorModal, openGetDataError };

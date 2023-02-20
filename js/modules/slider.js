@@ -14,9 +14,9 @@ noUiSlider.create(priceSlider, {
   format: {
     to: function(value) {
       if (Number.isInteger(value)) {
-        return value.toFixed(0);
+        return parseInt(value, 10).toFixed(0);
       }
-      return value.toFixed(0);
+      return parseInt(value, 10).toFixed(0);
     },
     from: function(value) {
       return parseFloat(value);

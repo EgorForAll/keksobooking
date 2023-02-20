@@ -1,6 +1,10 @@
 // Загузка аватарки
 const avatar = document.querySelector('#avatar');
 const avatarPreview = document.querySelector('.ad-form-header__preview').firstElementChild;
+const photo = document.querySelector('#images');
+const photoPreview = document.querySelector('.ad-form__photo');
+photoPreview.setAttribute('style', 'display: flex');
+photoPreview.setAttribute('style', 'text-align: center');
 
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
@@ -18,12 +22,6 @@ avatar.addEventListener('change', () => {
 });
 
 // Загрузить фото жилья
-
-const photo = document.querySelector('#images');
-const photoPreview = document.querySelector('.ad-form__photo');
-photoPreview.setAttribute('style', 'display: flex');
-photoPreview.setAttribute('style', 'text-align: center');
-
 photo.addEventListener('change', () => {
   const file = photo.files[0];
   const fileName = file.name.toLowerCase();

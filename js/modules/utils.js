@@ -1,4 +1,4 @@
-import { CENTER_TOKYO, clearMarker, mainPinMarker, map, markersArr, renderMap } from './map.js';
+import { CENTER_TOKYO, mainPinMarker, map } from './map.js';
 import { priceSlider } from './slider.js';
 
 // Случайное целое число
@@ -22,13 +22,10 @@ const clearFields = () => {
   document.querySelector('#address').value = '35.68596, 139.729518';
   document.querySelector('.leaflet-popup-pane').innerHTML = '';
   map.setView(CENTER_TOKYO, 10);
-  clearMarker();
   mainPinMarker.setLatLng(CENTER_TOKYO);
-  markersArr.forEach(item => renderMap(item));
 };
 
 // Устранения дребезга
-
 function debounce(callback, timeoutDelay) {
   let timeoutId;
   return (...rest) => {

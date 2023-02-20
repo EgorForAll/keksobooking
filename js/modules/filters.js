@@ -1,70 +1,41 @@
+import { renderMarker, clearMarker } from './map.js';
+
+const MARKERS_COUNTER = 10;
+const DEFAULT_VALUE = 'any';
+
+const priceMapFilter = {
+  low: {
+    start: 0,
+    end: 10000
+  },
+  middle: {
+    start: 10000,
+    end: 50000
+  },
+  high: {
+    start: 50000,
+    end: 1000000
+  }
+};
+
 const typeHouseFilter = document.querySelector('#housing-type');
-const typeHouseFilterList = typeHouseFilter.children;
 const typePriceFilter = document.querySelector('#housing-price');
-const typePriceFilterList = typePriceFilter.children;
 const typeCapacityFilter = document.querySelector('#housing-rooms');
-const typeCapacityFilterList = typeCapacityFilter.children;
 const typePersonFilter = document.querySelector('#housing-guests');
-const typePersonFilterList = typePersonFilter.children;
 const mapFilters = document.querySelector('.map__filters');
 const featuresFilter = mapFilters.querySelectorAll('.map__checkbox');
 
 // Фильтр по типу жилья
-function setTypeFilter(marker) {
-  if (marker.offer.type === 'palace' && typeHouseFilter.value === typeHouseFilterList[5].value) {
-    return true;
-  } else if (marker.offer.type === 'house' && typeHouseFilter.value === typeHouseFilterList[4].value) {
-    return true;
-  } else if (marker.offer.type === 'hotel' && typeHouseFilter.value === typeHouseFilterList[3].value) {
-    return true;
-  } else if (marker.offer.type === 'flat' && typeHouseFilter.value === typeHouseFilterList[2].value) {
-    return true;
-  } else if (marker.offer.type === 'bungalow' && typeHouseFilter.value === typeHouseFilterList[1].value) {
-    return true;
-  } else if (typeHouseFilter.value === typeHouseFilterList[0].value) {
-    return true;
-  }
-
-}
+const setTypeFilter = (marker) => typeHouseFilter.value === marker.offer.type || typeHouseFilter.value === DEFAULT_VALUE;
 
 // Фильтр по цене
-function setPriceFilter(marker) {
-  if (marker.offer.price >= 50000 && typePriceFilter.value === typePriceFilterList[3].value) {
-    return true;
-  } else if (marker.offer.price <= 10000 && typePriceFilter.value === typePriceFilterList[2].value) {
-    return true;
-  } else if (marker.offer.price > 10000 && marker.offer.price < 50000 && typePriceFilter.value === typePriceFilterList[1].value) {
-    return true;
-  } else if (typePriceFilter.value === typePriceFilterList[0].value) {
-    return true;
-  }
-}
+const setPriceFilter = (marker) => typePriceFilter.value === DEFAULT_VALUE || (marker.offer.price >= priceMapFilter[typePriceFilter.value].start && marker.offer.price <= priceMapFilter[typePriceFilter.value].end);
 
 // Фильтр по количеству комнат
-function setCapacityFilter(marker) {
-  if (marker.offer.rooms === 3 && typeCapacityFilter.value === typeCapacityFilterList[3].value) {
-    return true;
-  } else if (marker.offer.rooms === 2 && typeCapacityFilter.value === typeCapacityFilterList[2].value) {
-    return true;
-  } if (marker.offer.rooms === 1 && typeCapacityFilter.value === typeCapacityFilterList[1].value) {
-    return true;
-  } else if (typeCapacityFilter.value === typeCapacityFilterList[0].value) {
-    return true;
-  }
-}
+const setCapacityFilter = (marker) => marker.offer.rooms === +typeCapacityFilter.value || typeCapacityFilter.value === DEFAULT_VALUE;
 
 // Фильтр по количеству гостей
-function setPersonFilter(marker) {
-  if (marker.offer.guests === 0 && typePersonFilter.value === typePersonFilterList[3].value) {
-    return true;
-  } else if (marker.offer.guests === 1 && typePersonFilter.value === typePersonFilterList[2].value) {
-    return true;
-  } else if (marker.offer.guests === 2 && typePersonFilter.value === typePersonFilterList[1].value) {
-    return true;
-  } else if (typePersonFilter.value === typePersonFilterList[0].value) {
-    return true;
-  }
-}
+const setPersonFilter = (marker) => marker.offer.guests === +typePersonFilter.value || typePersonFilter.value === DEFAULT_VALUE;
 
 // Фильтр по чекбоксам
 const checkboxFilter = (marker) => Array.from(featuresFilter)
@@ -78,4 +49,30 @@ const checkboxFilter = (marker) => Array.from(featuresFilter)
     return marker.offer.features.includes(filterFeature.value);
   });
 
-export {setTypeFilter, setPriceFilter, setCapacityFilter, setPersonFilter, checkboxFilter};
+const checkAllFilters = (markers) => {
+  const filteredData = [];
+  for (let i = 0; i < markers.length; i++) {
+    const marker = markers[i];
+    if (
+      setPersonFilter(marker) && setCapacityFilter(marker) && setPriceFilter(marker) && setTypeFilter(marker) && checkboxFilter(marker)
+    ) {
+      renderMarker(marker);
+      filteredData.push(marker);
+    }
+
+    if (filteredData.length === MARKERS_COUNTER) {
+      break;
+    }
+  }
+  return filteredData;
+};
+
+// Перерисовка карты
+const changeFilters = (cb) => {
+  mapFilters.addEventListener('change', () => {
+    clearMarker();
+    cb();
+  });
+};
+
+export {checkAllFilters, changeFilters};

@@ -1,33 +1,40 @@
 /* eslint-disable no-undef */
-import { activePage, nonActivePage } from './disable.js';
+import { activateForm } from './disable.js';
 import { createBalloon } from './ballon.js';
-import { setTypeFilter, setPriceFilter, setCapacityFilter, setPersonFilter, checkboxFilter } from './filters.js';
-import { getRandomArrayElement, debounce } from './utils.js';
+import { getAddressCoordinates } from './form.js';
 
-// Пока карта не загрузилась форма заблокирована
-nonActivePage();
-
-const mapFilters = document.querySelector('.map__filters');
 const address = document.querySelector('#address');
-address.value = '35.68596, 139.729518';
+const centerOfTokyo = '35.68596, 139.729518';
+address.value = centerOfTokyo;
+
 const CENTER_TOKYO = {
   lat: 35.68596,
   lng: 139.729518
 };
 
+const ZOOM_MAP = 10;
+
+const LeafletParameters = {
+  TILE_LAYER: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  ATTRIBUTION: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+};
+
 // Инициализация карты
-const map = L.map('map-canvas')
-  .setView(CENTER_TOKYO, 10);
+const map = L.map('map-canvas');
 
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }
-).addTo(map);
+const getMap = () => {
+  map.on('load', () => {
+    activateForm(); // При успешной загрузке карты форма переключается в активное состояние
+    getAddressCoordinates(CENTER_TOKYO);
+  })
+    .setView(CENTER_TOKYO, ZOOM_MAP);
 
-// При закрузке карта форма доступна
-map.addEventListener('load', activePage());
+  // добавление open source изображения на созданную карту
+  L.tileLayer(LeafletParameters.TILE_LAYER, {
+    attribution: LeafletParameters.ATTRIBUTION
+  })
+    .addTo(map);
+};
 
 // Создание слоя с группой меток
 const markerGroup = L.layerGroup().addTo(map);
@@ -39,6 +46,13 @@ const mainPinIcon = L.icon({
   iconAnchor: [26, 52]
 });
 
+// Добавление обычной метки
+const usualPinIcon = L.icon({
+  iconUrl: './img/pin.svg',
+  iconSize: [40, 40],
+  iconAnchor: [26, 52]
+});
+
 const mainPinMarker = L.marker(
   CENTER_TOKYO,
   {
@@ -47,72 +61,33 @@ const mainPinMarker = L.marker(
   }
 );
 
-mainPinMarker.addTo(markerGroup);
+mainPinMarker.addTo(map);
 
 // Изменение координат в поле адрес при перемещении главной метки
-mainPinMarker.on('moveend', (evt) => {
+const mainMarkersCoordinates = () => mainPinMarker.on('moveend', (evt) => {
   const object = evt.target.getLatLng();
   address.value = `${object.lat.toFixed(5)}, ${object.lng.toFixed(5)}`;
 });
 
-// Добавление обычной метки
-const usualPinIcon = L.icon({
-  iconUrl: './img/pin.svg',
-  iconSize: [52, 52],
-  iconAnchor: [26, 52]
-});
-
-const POINTERS_COUNT = 10;
-const markersArr = [];
-
 // Функция по дабавлению меток на карту при фильтрации
-const renderMap = (element) => {
-  let pointer = L.marker(
-    {
-      lat: element.location.lat,
-      lng: element.location.lng
-    },
-    {
-      draggable: true,
-      icon: usualPinIcon
+const renderMarker = (element) => {
+  let pinMarker = L.marker(
+    element.location, {
+      icon: usualPinIcon,
+      draggable: true
     }
   );
-  mainPinMarker.addTo(map);
-  pointer.addTo(markerGroup).bindPopup(createBalloon(element), {
-    keepInView: true
-  });
+  pinMarker
+    .addTo(markerGroup)
+    .bindPopup(
+      createBalloon(element), // привязывает балун-объявление к метке
+      {
+        keepInView: true
+      }
+    );
 };
-
-// Получение меток по сети в массив для последующей фильтрации
-function getMarkers(markers) {
-  for (let i = 0; i < POINTERS_COUNT; i++) {
-    markersArr.push((getRandomArrayElement(markers)));
-  };
-  markersArr.forEach(item => renderMap(item));
-}
 
 // Очищение слоя с метками объявлений
 const clearMarker = () => markerGroup.clearLayers();
 
-// Фильтрация
-function setFilterAll() {
-  clearMarker();
-  let newArr = markersArr
-    .filter(marker => setTypeFilter(marker) && setPriceFilter(marker) && setCapacityFilter(marker) && setPersonFilter(marker) && checkboxFilter(marker));
-  newArr.forEach((element) => renderMap(element));
-}
-
-const filterAll = (cb) => {
-  mapFilters.addEventListener('change', function(evt) {
-    if (evt.target) {
-      cb();
-    }
-  });
-};
-
-// Вешаем debounce
-const TIMEOUT_DELAY = 500;
-
-filterAll(debounce(setFilterAll, TIMEOUT_DELAY));
-
-export { getMarkers, clearMarker, map, markersArr, renderMap, mainPinMarker, CENTER_TOKYO };
+export { renderMarker, getMap, clearMarker, map, mainPinMarker, CENTER_TOKYO, mainMarkersCoordinates };

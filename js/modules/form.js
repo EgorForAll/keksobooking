@@ -1,8 +1,37 @@
-import { openErrorModal } from './modal-windows.js';
 import { sendData } from './api.js';
-import { priceSlider } from './slider.js';
+import { clearFields } from './utils.js';
+import { openSuccessModal, openErrorModal } from './modal-windows.js';
+
+const COORDINATE_ROUND = 5;
+const capacityAbility = {
+  1: 1,
+  2: 2,
+  3: 3,
+  100: 0
+};
+
+const MIN_PRICE_OF_TYPE = {
+  bungalow: 0,
+  flat: 1000,
+  hotel: 3000,
+  house: 5000,
+  palace: 10000
+};
 
 const form = document.querySelector('.ad-form');
+const address = form.querySelector('#address');
+const type = form.querySelector('#type');
+const price = form.querySelector('#price');
+const roomNumber = form.querySelector('#room_number');
+const capacity = form.querySelector('#capacity');
+const timeIn = form.querySelector('#timein');
+const timeOut = form.querySelector('#timeout');
+
+// Передача координат главной метки в поле "Адрес (координаты)"
+address.setAttribute('readonly', '');
+const getAddressCoordinates = (coordinates) => {
+  address.value = `${(coordinates.lat).toFixed(COORDINATE_ROUND)}, ${(coordinates.lng).toFixed(COORDINATE_ROUND)}`;
+};
 
 // Валидация формы
 // eslint-disable-next-line no-undef
@@ -16,9 +45,9 @@ const pristine = new Pristine(form, {
 });
 
 // Валидация заголовка
-function validateNickname(value) {
+const validateNickname = (value) => {
   return value.length >= 30 && value.length <= 100;
-}
+};
 
 pristine.addValidator(form.querySelector('#title'),
   validateNickname,
@@ -26,147 +55,76 @@ pristine.addValidator(form.querySelector('#title'),
 );
 
 // Валидация цены
-const type = form.querySelector('#type');
-const price = form.querySelector('#price');
+function validatePrice() {
+  const intValue = parseInt(price.value, 10);
+  return intValue > MIN_PRICE_OF_TYPE[type.value] && intValue <= 100000;
+};
 
-const TYPE = [
-  'bungalow',
-  'flat',
-  'hotel',
-  'house',
-  'palace'
-];
-
-function validatePricePlaceholder() {
-  if (type.value === TYPE[1]) {
-    priceSlider.noUiSlider.set(1000);
-  } else if (type.value === TYPE[2]) {
-    priceSlider.noUiSlider.set(3000);
-  } else if (type.value === TYPE[3]) {
-    priceSlider.noUiSlider.set(5000);
-  } else if (type.value === TYPE[4]) {
-    priceSlider.noUiSlider.set(10000);
-
+const getPriceErrorMsg = () => {
+  if (price.value > 100000) {
+    return 'не более 100000 рублей';
+  }
+  switch (type.value) {
+    case 'flat': return 'не менее 1000 рублей';
+    case 'hotel': return 'не менее 3000 рублей';
+    case 'house': return 'не менee 5000 рублей';
+    case 'palace': return 'не менее 10000 рублей';
   }
 };
 
-function validatePriceValue() {
-  if (type.value === TYPE[1]) {
-    return price.value >= 1000;
-  } else if (type.value === TYPE[2]) {
-    return price.value >= 3000;
-  } else if (type.value === TYPE[3]) {
-    return price.value >= 5000;
-  } else if (type.value === TYPE[4]) {
-    return price.value >= 10000;
-  }
-}
-
-function errorMessage() {
-  if (type.value === TYPE[1]) {
-    return 'не менее 1000 руб.';
-  } else if (type.value === TYPE[2]) {
-    return 'не менее 3000 руб.';
-  } else if (type.value === TYPE[3]) {
-    return 'не менее 5000 руб.';
-  } else if (type.value === TYPE[4]) {
-    return 'не менее 10000 руб.';
-  }
-}
-
-type.addEventListener('change', validatePricePlaceholder);
-
-pristine.addValidator(
-  price,
-  validatePriceValue,
-  errorMessage
-);
+pristine.addValidator(price, validatePrice, getPriceErrorMsg);
 
 // Валидация количества комнат
-const roomNumber = form.querySelector('#room_number');
-const capacity = form.querySelector('#capacity');
-
-const capacityAbility = {
-  1: 1,
-  2: 2,
-  3: 3,
-  100: 0
-};
-
-function validateCapacity() {
+const validateCapacity = () => {
   return capacity.value <= capacityAbility[roomNumber.value];
 };
 
-function errorPersons() {
-  if (roomNumber.value === '1' && capacity.value > '1') {
-    return 'не более 1 человека на 1 комнату';
-  } else if (roomNumber.value === '2' && capacity.value > '2') {
-    return 'не более 2 человек на 2 комнаты';
-  } else if (roomNumber.value === '3' && capacity.value > '2') {
-    return 'не более 3 человек на 3 комнаты';
-  } else if (roomNumber.value === '100' && capacity.value !== '0') {
-    return '100 комнат не для гостей';
+const getCapacityErrorMsg = () => {
+  switch (roomNumber.value) {
+    case '3': return 'не более трех человек';
+    case '2': return 'не более двух человек';
+    case '1': return 'не более одного человека';
+    case '100': return 'не для гостей';
   }
-}
-pristine.addValidator(roomNumber,
-  validateCapacity,
-  errorPersons
-);
+};
+
+pristine.addValidator(capacity, validateCapacity, getCapacityErrorMsg);
 
 // Валидация времени заезда, выезда
-const timeIn = form.querySelector('#timein');
-const timeOut = form.querySelector('#timeout');
-const timeInList = Array.from(timeIn.children);
-const timeOutList = Array.from(timeOut.children);
+timeIn.addEventListener('change', () => { timeOut.value = timeIn.value; });
+timeOut.addEventListener('change', () => { timeIn.value = timeOut.value; });
 
-function validateTimeIn() {
-
-  for (let i = 0; i < timeInList.length; i++) {
-    if (timeIn.value === timeInList[i].value) {
-      timeOut.value = timeOutList[i].value;
-      return timeIn.value === timeOut.value;
-    }
-  }
-}
-
-function validateTimeOut() {
-
-  for (let i = 0; i < timeOutList.length; i++) {
-    if (timeOut.value === timeOutList[i].value) {
-      timeIn.value = timeInList[i].value;
-      return timeOut.value === timeIn.value;
-    }
-  }
-}
-
-pristine.addValidator(timeIn,
-  validateTimeIn
-);
-
-pristine.addValidator(timeOut,
-  validateTimeOut
-);
-
-const setUserFormSubmit = (onSuccess) => {
+// Отправка формы
+const sendForm = (cb) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
+    document.querySelector('.ad-form__submit').setAttribute('disabled', 'disabled');
     const isValid = pristine.validate();
     if (isValid) {
-      document.querySelector('#address').removeAttribute('disabled', true);
       sendData(
         () => {
-          document.querySelector('.ad-form__submit').setAttribute('disabled', true);
-          onSuccess();
+          openSuccessModal();
+          clearFields();
+
+          cb();
         },
-        () => {
-          openErrorModal();
-          document.querySelector('.ad-form__submit').removeAttribute('disabled', true);
-        },
+        openErrorModal,
         // eslint-disable-next-line no-undef
         new FormData(evt.target)
       );
     }
+    document.querySelector('.ad-form__submit').removeAttribute('disabled', 'disabled');
+  }
+  );
+};
+
+// Сброс полей
+const resetForm = (cb) => {
+  document.querySelector('.ad-form__reset').addEventListener('click', function(evt) {
+    evt.preventDefault();
+    clearFields();
+    cb();
   });
 };
 
-export {setUserFormSubmit};
+export {getAddressCoordinates, sendForm, resetForm};

@@ -1,6 +1,11 @@
+import { openGetDataError } from './modal-windows.js';
+
 /* eslint-disable no-undef */
-const getData = (onSuccess, onFail) => {
-  fetch('https://25.javascript.pages.academy/keksobooking/data')
+const DATA = 'https://25.javascript.pages.academy/keksobooking/data';
+const SERVER = 'https://25.javascript.pages.academy/keksobooking';
+
+const getData = (onSuccess) => {
+  fetch(DATA)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -8,17 +13,16 @@ const getData = (onSuccess, onFail) => {
 
       throw new Error(`${response.status} ${response.statusText}`);
     })
-    .then((markers) => {
-      onSuccess(markers);
+    .then((response) => {
+      onSuccess(response);
     })
     .catch(() => {
-      onFail();
+      openGetDataError();
     });
 };
 
 const sendData = (onSuccess, onFail, body) => {
-  fetch(
-    'https://25.javascript.pages.academy/keksobooking',
+  fetch(SERVER,
     {
       method: 'POST',
       body
